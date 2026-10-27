@@ -96,6 +96,18 @@ test('should expect icon to be ContainerIcon if no context/view is passed', asyn
   expect(typeof imageinfoUIs[0].icon !== 'string').toBe(true);
 });
 
+test.each([[undefined], [[]]])('should yield one untagged row when RepoTags is %j', async repoTags => {
+  const imageInfo = {
+    Id: 'sha256:1234567890abcdef',
+    Size: 123,
+    RepoTags: repoTags,
+  } as unknown as ImageInfo;
+  const imageinfoUIs = imageUtils.getImagesInfoUI(imageInfo, []);
+  expect(imageinfoUIs).toHaveLength(1);
+  expect(imageinfoUIs[0].name).toBe('<none>');
+  expect(imageinfoUIs[0].tag).toBe('');
+});
+
 test('check parsing of image info without labels', async () => {
   const context = new ContextUI();
   const imageInfo = {
